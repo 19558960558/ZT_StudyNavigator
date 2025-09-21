@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习导航</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a192f, #172a45, #1e3a5f);
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 30px;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 星空背景效果 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0px, transparent 1px),
+                    radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.15) 0px, transparent 1px),
+                    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.1) 0px, transparent 1px),
+                    radial-gradient(circle at 60% 10%, rgba(255, 255, 255, 0.2) 0px, transparent 1px),
+                    radial-gradient(circle at 30% 80%, rgba(255, 255, 255, 0.15) 0px, transparent 1px),
+                    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.1) 0px, transparent 1px);
+            background-size: 300px 300px;
+            z-index: -1;
+            animation: twinkle 8s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #4da0ff, #5d8cff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* 优化搜索框样式 - 按钮与输入框完美贴合 */
+        .search-box {
+            display: flex;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.3s ease;
+            max-width: 700px;
+            width: 100%;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .search-box:focus-within {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 18px 20px;
+            background: transparent;
+            border: none;
+            font-size: 1.1rem;
+            color: white;
+            outline: none;
+            min-width: 200px;
+            border-radius: 50px 0 0 50px;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-box button {
+            background: linear-gradient(45deg, #4da0ff, #5d8cff);
+            border: none;
+            color: white;
+            padding: 0 35px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(93, 140, 255, 0.4);
+            border-radius: 0 50px 50px 0;
+            min-width: 120px;
+        }
+
+        .search-box button:hover {
+            background: linear-gradient(45deg, #3d90ff, #4d7cff);
+            box-shadow: 0 6px 20px rgba(93, 140, 255, 0.6);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .controls button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #add-btn {
+            background: linear-gradient(45deg, #5d8cff, #4da0ff);
+            box-shadow: 0 4px 15px rgba(93, 140, 255, 0.4);
+        }
+
+        #add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(93, 140, 255, 0.6);
+        }
+
+        #sort-btn {
+            background: linear-gradient(45deg, #38ef7d, #11998e);
+            box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4);
+        }
+
+        #sort-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(56, 239, 125, 0.6);
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .link-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            cursor: grab;
+        }
+
+        .link-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .link-card.dragging {
+            opacity: 0.7;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4da0ff, #5d8cff);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .link-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .link-content {
+            padding: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .link-card a.link-title {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: color 0.3s;
+            padding-left: 40px;
+        }
+
+        .link-card a.link-title:hover {
+            color: #4da0ff;
+        }
+
+        .link-url {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .link-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .action-btn.edit:hover {
+            background: rgba(93, 140, 255, 0.3);
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(255, 94, 98, 0.3);
+        }
+
+        /* 修改排序指示器的位置 */
+        .sort-indicator {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1e3a5f, #172a45);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, #4da0ff, #5d8cff);
+            padding: 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #5d8cff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .modal-footer {
+            display: flex;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #4da0ff, #5d8cff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(93, 140, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(93, 140, 255, 0.6);
+        }
+
+        .confirmation-modal {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .confirmation-content {
+            background: linear-gradient(145deg, #1e3a5f, #172a45);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .confirmation-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #ff5e62;
+        }
+
+        .confirmation-content p {
+            margin-bottom: 25px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .search-box {
+                flex-direction: column;
+                border-radius: 50px;
+            }
+
+            .search-box input {
+                border-radius: 50px 50px 0 0;
+                padding: 15px 20px;
+            }
+
+            .search-box button {
+                border-radius: 0 0 50px 50px;
+                padding: 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .sort-indicator {
+                top: 10px;
+                left: 10px;
+            }
+
+            .link-card a.link-title {
+                padding-left: 35px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .link-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .modal-content {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: linear-gradient(90deg, #38ef7d, #11998e);
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1><i class="fas fa-compass"></i> ZT_学习导航</h1>
+    <p>聚合常用学习工具，一键直达，屏蔽干扰</p>
+</div>
+
+<div class="search-container">
+    <form class="search-box" action="https://search.bilibili.com/all" method="get" target="_blank">
+        <input type="text" placeholder="搜索B站资源..." name="keyword" required>
+        <button type="submit"><i class="fas fa-search"></i> 搜索</button>
+        <input type="hidden" name="from_source" value="webtop_search">
+        <input type="hidden" name="spm_id_from" value="333.1007">
+        <input type="hidden" name="search_source" value="3">
+    </form>
+</div>
+
+<div class="container">
+    <div class="controls">
+        <button id="add-btn"><i class="fas fa-plus-circle"></i> 添加新链接</button>
+        <button id="sort-btn"><i class="fas fa-sort"></i> 排序模式</button>
+    </div>
+
+    <div class="links-grid" id="links-container">
+        <!-- 链接卡片会在这里动态生成 -->
+    </div>
+</div>
+
+<!-- 编辑链接模态框 -->
+<div class="modal" id="edit-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <i class="fas fa-edit"></i> 编辑链接
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="link-name">链接名称</label>
+                <input type="text" id="link-name" placeholder="输入链接名称">
+            </div>
+            <div class="form-group">
+                <label for="link-url">链接URL</label>
+                <input type="url" id="link-url" placeholder="https://...">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancel-btn">取消</button>
+            <button class="btn btn-primary" id="save-btn">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 删除确认模态框 -->
+<div class="modal confirmation-modal" id="confirm-modal">
+    <div class="confirmation-content">
+        <h3><i class="fas fa-exclamation-triangle"></i> 确认删除</h3>
+        <p>您确定要删除这个链接吗？此操作无法撤销，链接将永久移除。</p>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancel-delete">取消</button>
+            <button class="btn btn-primary" id="confirm-delete">确认删除</button>
+        </div>
+    </div>
+</div>
+
+<div class="notification" id="notification"></div>
+
+<script>
+    // 初始链接数据
+    const defaultLinks = [
+        { id: 1, name: "腾讯元宝", url: "https://yuanbao.tencent.com/chat/naQivTmsDa" },
+        { id: 2, name: "哔哩哔哩", url: "https://www.bilibili.com/" },
+    ];
+
+    // DOM元素
+    const linksContainer = document.getElementById('links-container');
+    const editModal = document.getElementById('edit-modal');
+    const confirmModal = document.getElementById('confirm-modal');
+    const addBtn = document.getElementById('add-btn');
+    const sortBtn = document.getElementById('sort-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const cancelDeleteBtn = document.getElementById('cancel-delete');
+    const confirmDeleteBtn = document.getElementById('confirm-delete');
+    const notification = document.getElementById('notification');
+
+    // 当前状态
+    let currentLinkId = null;
+    let links = [];
+    let isEditing = false;
+    let deleteLinkId = null;
+    let isSortMode = false;
+    let draggedCard = null;
+
+    // 加载链接
+    function loadLinks() {
+        const savedLinks = localStorage.getItem('learningLinks');
+        links = savedLinks ? JSON.parse(savedLinks) : [...defaultLinks];
+        renderLinks();
+    }
+
+    // 保存链接
+    function saveLinks() {
+        localStorage.setItem('learningLinks', JSON.stringify(links));
+    }
+
+    // 渲染链接列表
+    function renderLinks() {
+        linksContainer.innerHTML = '';
+
+        links.forEach((link, index) => {
+            const card = document.createElement('div');
+            card.className = 'link-card';
+            card.setAttribute('data-id', link.id);
+            card.setAttribute('draggable', 'true');
+            card.innerHTML = `
+                <div class="sort-indicator">${index + 1}</div>
+                <div class="link-content">
+                    <a href="${link.url}" target="_blank" class="link-title">${link.name}</a>
+                    <span class="link-url">${link.url}</span>
+                </div>
+                <div class="link-actions">
+                    <button class="action-btn edit" data-id="${link.id}">
+                        <i class="fas fa-edit"></i> 编辑
+                    </button>
+                    <button class="action-btn delete" data-id="${link.id}">
+                        <i class="fas fa-trash-alt"></i> 删除
+                    </button>
+                </div>
+            `;
+            linksContainer.appendChild(card);
+        });
+
+        // 添加事件监听器
+        document.querySelectorAll('.action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                openEditModal(parseInt(e.currentTarget.getAttribute('data-id')));
+            });
+        });
+
+        document.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                showConfirmDelete(parseInt(e.currentTarget.getAttribute('data-id')));
+            });
+        });
+
+        // 添加拖拽事件
+        setupDragAndDrop();
+    }
+
+    // 设置拖拽功能
+    function setupDragAndDrop() {
+        const cards = document.querySelectorAll('.link-card');
+
+        cards.forEach(card => {
+            card.addEventListener('dragstart', handleDragStart);
+            card.addEventListener('dragover', handleDragOver);
+            card.addEventListener('dragenter', handleDragEnter);
+            card.addEventListener('dragleave', handleDragLeave);
+            card.addEventListener('drop', handleDrop);
+            card.addEventListener('dragend', handleDragEnd);
+        });
+    }
+
+    // 拖拽开始
+    function handleDragStart(e) {
+        if (!isSortMode) return;
+
+        draggedCard = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', this.getAttribute('data-id'));
+    }
+
+    // 拖拽经过
+    function handleDragOver(e) {
+        if (!isSortMode) return;
+
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    }
+
+    // 拖拽进入
+    function handleDragEnter(e) {
+        if (!isSortMode) return;
+
+        this.classList.add('drag-over');
+    }
+
+    // 拖拽离开
+    function handleDragLeave(e) {
+        if (!isSortMode) return;
+
+        this.classList.remove('drag-over');
+    }
+
+    // 放置
+    function handleDrop(e) {
+        if (!isSortMode) return;
+
+        e.preventDefault();
+        this.classList.remove('drag-over');
+
+        const draggedId = parseInt(e.dataTransfer.getData('text/plain'));
+        const targetId = parseInt(this.getAttribute('data-id'));
+
+        if (draggedId !== targetId) {
+            // 重新排序链接数组
+            const draggedIndex = links.findIndex(link => link.id === draggedId);
+            const targetIndex = links.findIndex(link => link.id === targetId);
+
+            // 移动元素
+            const [movedItem] = links.splice(draggedIndex, 1);
+            links.splice(targetIndex, 0, movedItem);
+
+            // 保存并重新渲染
+            saveLinks();
+            renderLinks();
+
+            showNotification('链接顺序已更新');
+        }
+    }
+
+    // 拖拽结束
+    function handleDragEnd(e) {
+        if (!isSortMode) return;
+
+        this.classList.remove('dragging');
+        draggedCard = null;
+
+        // 移除所有拖拽样式
+        document.querySelectorAll('.link-card').forEach(card => {
+            card.classList.remove('drag-over');
+        });
+    }
+
+    // 切换排序模式
+    function toggleSortMode() {
+        isSortMode = !isSortMode;
+
+        if (isSortMode) {
+            sortBtn.innerHTML = '<i class="fas fa-check"></i> 完成排序';
+            sortBtn.style.background = 'linear-gradient(45deg, #ff9966, #ff5e62)';
+            showNotification('排序模式已启用，拖拽链接调整顺序');
+        } else {
+            sortBtn.innerHTML = '<i class="fas fa-sort"></i> 排序模式';
+            sortBtn.style.background = 'linear-gradient(45deg, #38ef7d, #11998e)';
+            showNotification('排序模式已关闭');
+        }
+
+        // 更新卡片可拖拽状态
+        document.querySelectorAll('.link-card').forEach(card => {
+            card.setAttribute('draggable', isSortMode);
+        });
+    }
+
+    // 打开编辑模态框
+    function openEditModal(linkId) {
+        if (isSortMode) return;
+
+        isEditing = true;
+        currentLinkId = linkId;
+
+        const link = links.find(link => link.id === linkId);
+        if (link) {
+            document.getElementById('link-name').value = link.name;
+            document.getElementById('link-url').value = link.url;
+            editModal.querySelector('.modal-header').innerHTML = `<i class="fas fa-edit"></i> 编辑链接: ${link.name}`;
+            editModal.classList.add('active');
+        }
+    }
+
+    // 打开添加模态框
+    function openAddModal() {
+        if (isSortMode) return;
+
+        isEditing = false;
+        currentLinkId = null;
+
+        document.getElementById('link-name').value = '';
+        document.getElementById('link-url').value = '';
+        editModal.querySelector('.modal-header').innerHTML = `<i class="fas fa-plus-circle"></i> 添加新链接`;
+        editModal.classList.add('active');
+    }
+
+    // 保存链接
+    function saveLink() {
+        const name = document.getElementById('link-name').value.trim();
+        const url = document.getElementById('link-url').value.trim();
+
+        if (!name || !url) {
+            showNotification('请输入名称和URL！', 'error');
+            return;
+        }
+
+        try {
+            new URL(url); // 验证URL有效性
+        } catch {
+            showNotification('请输入有效的URL！', 'error');
+            return;
+        }
+
+        if (isEditing) {
+            // 更新现有链接
+            const index = links.findIndex(link => link.id === currentLinkId);
+            if (index !== -1) {
+                links[index].name = name;
+                links[index].url = url;
+                showNotification(`已更新: ${name}`);
+            }
+        } else {
+            // 添加新链接
+            const newId = links.length > 0 ? Math.max(...links.map(link => link.id)) + 1 : 1;
+            links.push({ id: newId, name, url });
+            showNotification(`已添加: ${name}`);
+        }
+
+        saveLinks();
+        renderLinks();
+        closeEditModal();
+    }
+
+    // 删除链接
+    function deleteLink() {
+        if (deleteLinkId) {
+            const link = links.find(link => link.id === deleteLinkId);
+            if (link) {
+                const index = links.findIndex(link => link.id === deleteLinkId);
+                links.splice(index, 1);
+                showNotification(`已删除: ${link.name}`);
+                saveLinks();
+                renderLinks();
+            }
+            confirmModal.classList.remove('active');
+            deleteLinkId = null;
+        }
+    }
+
+    // 显示确认删除对话框
+    function showConfirmDelete(linkId) {
+        if (isSortMode) return;
+
+        deleteLinkId = linkId;
+        const link = links.find(link => link.id === linkId);
+        if (link) {
+            confirmModal.querySelector('h3').innerHTML = `<i class="fas fa-exclamation-triangle"></i> 确认删除: ${link.name}`;
+            confirmModal.classList.add('active');
+        }
+    }
+
+    // 关闭编辑模态框
+    function closeEditModal() {
+        editModal.classList.remove('active');
+    }
+
+    // 显示通知
+    function showNotification(message, type = 'success') {
+        notification.textContent = message;
+        if (type === 'error') {
+            notification.style.background = 'linear-gradient(90deg, #ff9966, #ff5e62)';
+        } else {
+            notification.style.background = 'linear-gradient(90deg, #38ef7d, #11998e)';
+        }
+        notification.style.display = 'block';
+
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+
+    // 初始化页面
+    function init() {
+        loadLinks();
+
+        // 事件监听
+        addBtn.addEventListener('click', openAddModal);
+        sortBtn.addEventListener('click', toggleSortMode);
+        cancelBtn.addEventListener('click', closeEditModal);
+        saveBtn.addEventListener('click', saveLink);
+        cancelDeleteBtn.addEventListener('click', () => {
+            confirmModal.classList.remove('active');
+            deleteLinkId = null;
+        });
+        confirmDeleteBtn.addEventListener('click', deleteLink);
+
+        // 点击模态框外部关闭
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                closeEditModal();
+            }
+        });
+
+        confirmModal.addEventListener('click', (e) => {
+            if (e.target === confirmModal) {
+                confirmModal.classList.remove('active');
+                deleteLinkId = null;
+            }
+        });
+    }
+
+    // 启动应用
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
